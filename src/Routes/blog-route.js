@@ -10,7 +10,7 @@ router.get('/test-me' , (req,res)=>{
 })
 
 router.post("/authors",middW.middleWare1,authorController.createAuthor)
-router.post("/blogs",blogComtroller.)
-router.get("/blogs",)
+router.post("/blogs",middW.middleWare2,blogComtroller.createBlog)
+router.get("/blogs",blogComtroller.getBlogs)
 
 module.exports = router

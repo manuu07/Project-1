@@ -13,7 +13,11 @@ module.exports.middleWare1 = middleWare1
 
 const ValidEmail =  (req,res,next)=>{
     try {
-        const {email} = req.body
+        const email = document.getElementById("email").value
+        const emailpattern = /^[a-zA-z0-9._-] + @[a-zA-z0-9._-] +\.[a-zA-z]{2,4}$/
+        if (emailpattern == false){
+            alert("Enter the valid Email-id")
+        }
 
     } catch (error) {
         res.status(400).send({status : false , msg : error.message})

@@ -12,7 +12,8 @@ router.get('/test-me' , (req,res)=>{
 })
 
 // router.post('/test-email' , middleWare.ValidEmail)
-router.post('/Author' , middleWare.middleWare1 , middleWare.ValidEmail , authorController.createAuthor)
-router.post('/create-blogs' , middleWare.middleware2 , blogController.createBlog)
+router.post('/authors' , middleWare.middleWare1 , middleWare.ValidEmail , authorController.createAuthor)
+router.post('/blogs' , middleWare.middleware2 , blogController.createBlog)
+router.get('/blogs' , blogController.getBlogs)
 
 module.exports = router

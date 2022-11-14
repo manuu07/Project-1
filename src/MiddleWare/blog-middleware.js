@@ -47,11 +47,16 @@ const middleware2 = function(req ,res , next){
         }
         const ValidID = isValidObjectId(authorId)
         if(!ValidID){
-            return res.status(500).send({status : false , msg : 'validID is invalid '})
+            return res.status(400).send({status : false , msg : 'authorid is invalid '})
         }
     } catch (error) {
         res.status(500).send({status : false , msg : error.message})
     }
+    next()
 }
 
 module.exports.middleware2 = middleware2
+
+
+
+

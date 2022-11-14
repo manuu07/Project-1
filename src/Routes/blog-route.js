@@ -1,10 +1,10 @@
 const express = require("express")
 const middleWare = require('../MiddleWare/blog-middleware')
 const authorController = require("../Controller/Author-controller")
+const blogController = require("../Controller/blog-controller")
 const router = express.Router()
-const middW=require("../MiddleWare/blog-middleware")
-const authorController=require("../Controller/Author-controller")
-const blogComtroller=require("../Controller/blog-controller")
+
+
 
 
 router.get('/test-me' , (req,res)=>{
@@ -12,9 +12,7 @@ router.get('/test-me' , (req,res)=>{
 })
 
 // router.post('/test-email' , middleWare.ValidEmail)
-router.post('/create-author' , middleWare.middleWare1 , middleWare.ValidEmail , authorController.createAuthor)
-
-
-
+router.post('/Author' , middleWare.middleWare1 , middleWare.ValidEmail , authorController.createAuthor)
+router.post('/create-blogs' , middleWare.middleware2 , blogController.createBlog)
 
 module.exports = router

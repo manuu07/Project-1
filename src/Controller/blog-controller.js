@@ -1,17 +1,6 @@
 const blogModel = require('../models/blogModel')
 const authorModel = require('../models/blogModel')
 
-const postBlog = async (req, res )=>{
-    try {
-        const createBlog = await blogModel.create(req.body) 
-        res.status(200).send({ status : true , msg : createBlog})
-    } catch (error) {
-        res.status(500).send({status : false , msg : error.message})
-    }
- 
-}
-
-
 
  const createBlog=async function (req,res){
     try {

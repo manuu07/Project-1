@@ -22,11 +22,8 @@ const authorSchema=new mongoose.Schema({
         type:String,
         required:true
     }
-<<<<<<< HEAD
+    
 },{timestamps : true})
-=======
-},{timestamps:true})
->>>>>>> a2e6ad928f31b2cd49dbc93e9ebd2ff2eda8a48f
 
 module.exports=mongoose.model('Author',authorSchema)
 

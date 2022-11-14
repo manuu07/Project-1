@@ -1,6 +1,18 @@
 const blogModel = require('../models/blogModel')
 const authorModel = require('../models/blogModel')
 
+const postBlog = async (req, res )=>{
+    try {
+        const createBlog = await blogModel.create(req.body) 
+        res.status(200).send({ status : true , msg : createBlog})
+    } catch (error) {
+        res.status(500).send({status : false , msg : error.message})
+    }
+ 
+}
+
+
+
  const createBlog=async function (req,res){
     try {
     const data=req.body
@@ -21,7 +33,7 @@ module.exports.createBlog = createBlog
 const getBlogs = async function(req,res){
     try {
         const {category , subcategory , tag , author_id}  = req.body 
-        const getBlog = await authorModel.find({$or:[category , subcategory ,tag , {_id : author_id}]})
+        const getBlog = await blogModel.find({$or:[category , subcategory ,tag , {_id : author_id}]})
         res.status(200).send({status :true , data : getBlog })
     } catch (error) {
         res.status(500).send({status : false , msg : error.message})

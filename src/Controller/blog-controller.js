@@ -1,17 +1,18 @@
 const { response } = require('express')
 const blogModel = require('../models/blogModel')
-const authorModel = require('../models/blogModel')
+const authorModel = require('../models/authorModel')
 
 
  const createBlog=async function (req,res){
     try {
     const {authorId}=req.body
-    const userExist = await authorModel.findOne({_id : authorId})
-    if(userExist){
+    const userExist = await authorModel.findById(authorId)
+    if( !userExist){
+        res.status(400).send({status : false , msg: "autherid is not exist"})
+        
+    }else{
         const result = await blogModel.create(req.body)
         res.status(200).send({status :true , data : result })
-    }else{
-        res.status(400).send({status : false , msg: "autherid is not exist"})
     }
 
     }catch (error) {

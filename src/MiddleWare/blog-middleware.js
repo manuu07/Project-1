@@ -1,5 +1,6 @@
 const { response } = require("express")
 const { isValidObjectId } = require("mongoose")
+const moment = require('moment')
 
 const middleWare1 =  (req,res,next)=>{
     try {
@@ -52,6 +53,8 @@ const middleware2 = function(req ,res , next){
     } catch (error) {
         res.status(500).send({status : false , msg : error.message})
     }
+
+req.body.publishedAt = moment().format()
     next()
 }
 

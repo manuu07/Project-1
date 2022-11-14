@@ -14,9 +14,8 @@ module.exports.middleWare1 = middleWare1
 const ValidEmail =  (req,res,next)=>{
     try {
         const {email} = req.body
-
+      
     } catch (error) {
         res.status(400).send({status : false , msg : error.message})
-    }
-    
+    } 
 }

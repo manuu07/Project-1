@@ -5,15 +5,15 @@ const authorModel = require('../models/blogModel')
 
  const createBlog=async function (req,res){
     try {
-    const data=req.body
-    const allids=await authorModel.find().select({_id:1})
-        const isautherid=await blogModel.find({authorId:{$in:allids}})
-        if (isautherid){
-           const result = await blogModel.create(data)
-           res.status(200).send({status :true , data : result })
-        }else{
-            res.status(404).send({status : false , msg: "auther does not exists"})
-        }
+    const {authorId}=req.body
+    const userExist = await authorModel.findOne({_id : authorId})
+    if(userExist){
+        const result = await blogModel.create(req.body)
+        res.status(200).send({status :true , data : result })
+    }else{
+        res.status(400).send({status : false , msg: "autherid is not exist"})
+    }
+
     }catch (error) {
         res.status(500).send({status : false , msg : error.message})
     }
@@ -23,7 +23,7 @@ module.exports.createBlog = createBlog
 const getBlogs = async function(req,res){
     try {
         const {category , subcategory , tag , authorId}  = req.query
-        const getBlog = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag }, {_id : authorId}]})
+        const getBlog = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag }, {_id : authorId}]}).populate('authorId')
         console.log(getBlog)
         if(getBlog.length==0){
             return  res.status(404).send({status : false , message : 'blog not found'})

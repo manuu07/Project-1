@@ -1,9 +1,9 @@
-const authorModel = require('../models/blogModel')
+const authorModel = require('../models/authorModel')
 
 const createAuthor = async function(req,res){
     try {
         const {email} = req.body
-        const emailExist = await authorModel.findOne(email)
+        const emailExist = await authorModel.findOne({email :email})
         if( !emailExist ){
             const data = await authorModel.create(req.body)
             res.status(200).send({status : true , msg : data})

@@ -11,7 +11,7 @@ const authorSchema=new mongoose.Schema({
     },
     title:{
         type:String,
-        enum:[Mr,Mrs,Miss]
+        enum:["Mr","Mrs","Miss"]
     },
     email:{
         type:String,
@@ -22,7 +22,7 @@ const authorSchema=new mongoose.Schema({
         type:String,
         required:true
     }
-    
+
 },{timestamps : true})
 
 module.exports=mongoose.model('Author',authorSchema)

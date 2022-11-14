@@ -18,12 +18,13 @@ module.exports.middleWare1 = middleWare1
 const ValidEmail =  (req,res,next)=>{
     try {
         const email = req.body.email
-        const pattern = /^[a-zA-z0-9 \.] + @ +[a-zA-z0-9] +(\.) + ([a-zA-z]{2,6}) + (\.) + ([a-zA-z]{2,6})? $/
-        const matchEmail = email.match(pattern)
+        // const pattern = /^[a-zA-z0-9 \.] + @ +[a-zA-z0-9] +(\.) + ([a-zA-z]{2,6}) + (\.) + ([a-zA-z]{2,6})? $/
+        const pattern2 = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]{2,5})*$/
+        const matchEmail = email.match(pattern2)
         console.log(matchEmail)
 
         if(!matchEmail ){
-            res.status(400).send({status : false , msg : 'email is not valid '})
+          return  res.status(400).send({status : false , msg : 'email is not valid '})
         }
 next()
     } catch (error) {
@@ -31,5 +32,4 @@ next()
     }
     
 }
-
 module.exports.ValidEmail = ValidEmail

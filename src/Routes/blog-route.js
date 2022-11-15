@@ -16,4 +16,9 @@ router.post('/authors' , middleWare.middleWare1 , middleWare.ValidEmail , author
 router.post('/blogs' , middleWare.middleware2 , blogController.createBlog)
 router.get('/blogs' , blogController.getBlogs)
 
+router.put('/blogs/:blogId',blogController.updateBlogs)
+
+router.delete('/blogs/:blogId',blogController.deleteBlog)
+
+
 module.exports = router

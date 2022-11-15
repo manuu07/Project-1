@@ -7,7 +7,7 @@ const middleWare1 =  (req,res,next)=>{
     if(fname  && lname && title && email && password ){
         next()
     }else{
-        res.status(400).send({status : false , msg :"name ,lname,title,email,password each mandatory "})
+        res.status(400).send({status : false , msg :"fname ,lname,title,email,password each mandatory "})
     }
     } catch (error) {
         res.status(400).send({status : false , msg : error.message})

@@ -6,42 +6,44 @@ const moment=require('moment')
 
  const createBlog=async function (req,res){
     try {
-    const data=req.body
-    const allids=await authorModel.find().select({_id:1})
-        const isautherid=await blogModel.find({authorId:{$in:allids}})
-        if (isautherid){
-           const result = await blogModel.create(data)
-           res.status(200).send({status :true , data : result })
-        }else{
-            res.status(404).send({status : false , msg: "author does not exists"})
-        }
+    const {authorId}=req.body
+    const userExist = await authorModel.findById(authorId)
+    if( !userExist){
+        res.status(400).send({status : false , msg: "Author does not exist"})
+        
+    }else{
+        const result = await blogModel.create(req.body)
+        res.status(200).send({status :true , data : result })
+    }
+
     }catch (error) {
         res.status(500).send({status : false , msg : error.message})
     }
 }
 module.exports.createBlog = createBlog
 
-// const getBlogs = async function(req,res){
-//     try {
-//         const {category , subcategory , tag , authorId}  = req.query
-//         const getBlog = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag }, {_id : authorId}]})
-//         console.log(getBlog)
-//         if(getBlog.length==0){
-//             return  res.status(404).send({status : false , message : 'blog not found'})
-//         }else
-//         if ( getBlog.isPublished !== true && getBlog.isDeleted == false ){
-//             res.status(400).send({status : false , message : 'blog is not published or maybe deleted '})
-       
-//         }else{
-//             return  res.status(200).send({status :true , data : getBlog })
-//         }
-        
-//     } catch (error) {
-//         res.status(500).send({status : false , msg : error.message})
-//     }
-// }
 
+const getBlogs = async function(req, res) {
+    try {
+      const {category , subcategory , tags , authorId}  = req.query
+      if(!category && !subcategory && !tags && !authorId ){
+        const getAllBlogs = await blogModel.find({isPublished : true , isDeleted : false })
+         return  res.status(200).send({status : true , message : getAllBlogs})
+       }
 
+        const blog = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tags }, {_id : authorId}]})
+        const result=blog.filter(a=>{
+            if(  a.isPublished==true && a.isDeleted==false) return a  
+        })
+        if(result.length == 0){
+            return res.status(400).send({status :false , msg : 'blog not found'})
+        }else{
+            return res.status(200).send({status : true  , msg :result })
+        }
+    } catch (err) {
+        res.status(500).send({ status: false, error:err.message });
+    }
+  }
 
 
 const updateBlogs=async function(req,res){
@@ -72,8 +74,16 @@ const deleteBlog=async function(req,res){
     if(!blog) return res.status(404).send({status:false,msg:"Incorrect BlogId"})
     if(blog.isDeleted==true) return res.status(404).send({status:false,msg:"Blog does not exist"})
 
-    let deletedBlog=await blogModel.findOneAndUpdate({_id:blogId},{$set:{isDeleted:true,deletedAt:moment().format('YYYY-MM-DD, h:mm:ss')}} , {new:true})
+    let deletedBlog=await blogModel.findOneAndUpdate({_id:blogId},{$set:{isDeleted:true,deletedAt:moment().format()}} , {new:true})
     res.status(200).send({status:true,msg:deletedBlog})
+
+    // if(blog.isDeleted == false){
+    //     blog.isDeleted = true
+    //     blog.deletedAt = moment().format()
+    //     blog.save()
+    //     res.status(200).send({status:true,msg:blog})
+
+    // }
 }
 catch(err){
     return res.status(500).send({status:false,Error:err.message})
@@ -82,27 +92,7 @@ catch(err){
 
 
 
-const getBlogs = async function(req, res) {
-    try {
-      const {category , subcategory , tags , authorId}  = req.query
-      if(!category && !subcategory && !tags && !authorId ){
-        const getAllBlogs = await blogModel.find({isPublished : true , isDeleted : false })
-         return  res.status(200).send({status : true , message : getAllBlogs})
-       }
 
-        const blog = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tags }, {_id : authorId}]})
-        const result=blog.filter(a=>{
-            if(  a.isPublished==true && a.isDeleted==false) return a  
-        })
-        if(result.length == 0){
-            return res.status(400).send({status :false , msg : 'blog not found'})
-        }else{
-            return res.status(200).send({status : true  , msg :result })
-        }
-    } catch (err) {
-        res.status(500).send({ status: false, error:err.message });
-    }
-  }
 
 
 module.exports.updateBlogs=updateBlogs

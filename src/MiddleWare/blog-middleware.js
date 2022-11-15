@@ -6,8 +6,14 @@ const middleWare1 =  (req,res,next)=>{
     try {
         const {fname ,lname,title,email,password} = req.body
     if(fname  && lname && title && email && password ){
-        next()
-    }else{
+        const email = req.body.email
+        const pattern2 = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]{2,5})*$/
+        const matchEmail = email.match(pattern2)
+        if(!matchEmail ){
+          return  res.status(400).send({status : false , msg : 'email is not valid '})
+        }
+next()
+    } else {
         res.status(400).send({status : false , msg :"name ,lname,title,email,password something missing of them- "})
     }
     } catch (error) {
@@ -16,22 +22,6 @@ const middleWare1 =  (req,res,next)=>{
     
 }
 module.exports.middleWare1 = middleWare1
-
-const ValidEmail =  (req,res,next)=>{
-    try {
-        const email = req.body.email
-        const pattern2 = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]{2,5})*$/
-        const matchEmail = email.match(pattern2)
-        if(!matchEmail ){
-          return  res.status(400).send({status : false , msg : 'email is not valid '})
-        }
-next()
-    } catch (error) {
-        res.status(500).send({status : false , msg : error.message})
-    }
-    
-}
-module.exports.ValidEmail = ValidEmail
 
 const middleware2 = function(req ,res , next){
 

@@ -6,20 +6,21 @@ const router = express.Router()
 
 
 
-
 router.get('/test-me' , (req,res)=>{
     res.send('this is our first Project on blog-site')
 })
 
-// router.post('/test-email' , middleWare.ValidEmail)
-router.post('/authors' , middleWare.middleWare1 ,  authorController.createAuthor)
+// FIRST DAY OF PROJECT ---->
+
+router.post('/authors' , middleWare.middleWare1 , authorController.createAuthor)
 router.post('/blogs' , middleWare.middleware2 , blogController.createBlog)
 router.get('/blogs' , blogController.getBlogs)
 
+// SECOND DAY OF PROJECT ---->
+
 router.put('/blogs/:blogId',blogController.updateBlogs)
-
 router.delete('/blogs/:blogId',blogController.deleteBlog)
-
-
 router.delete("/blogs",blogController.deleteblogs) 
+
+
 module.exports = router

@@ -23,16 +23,6 @@ next()
 }
 module.exports.middleWare1 = middleWare1
 
-const ValidEmail =  (req,res,next)=>{
-    try {
-       
-    } catch (error) {
-        res.status(500).send({status : false , msg : error.message})
-    }
-    
-}
-module.exports.ValidEmail = ValidEmail
-
 const middleware2 = function(req ,res , next){
 
     try {

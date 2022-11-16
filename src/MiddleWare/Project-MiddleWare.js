@@ -23,9 +23,11 @@ const middleWare1 = (req, res, next) => {
     }
 
 }
+
 module.exports.middleWare1 = middleWare1
 
-const middleware2 = function (req, res, next) {
+
+const middleware2 = function(req ,res , next){
 
     try {
         const { authorId, isPublished } = req.body
@@ -44,17 +46,24 @@ const middleware2 = function (req, res, next) {
 module.exports.middleware2 = middleware2
 
 
-
-
-const authentication = (req, res, next) => {
-    const token = req.headers['x-api-key']
-
-    if (!token) res.status(400).send({ status: false, msg: 'token is not exist' })
-    const tokenVerify = jwt.verify(token, "litium batch Group-3 Project -01")
-    if (!tokenVerify) return res.status(400).send({ status: false, msg: 'invalid token' })
-    req.body['x-api-key'] = token
-    next()
+const authentication=async function(req,res,next){
+    try{ 
+    let token=req.headers['x-api-key']
+    if(token){
+        let decodedToken=jwt.verify(token,"litium batch Group-3 Project -01")
+        if(decodedToken){
+            req.decodedToken=decodedToken  
+            next()
+        }
+    }
+    else res.send({status:false,msg:"Token is missing"})
+}
+catch(err){
+    return res.status(500).send({status:false, Error:err.message})
+}
 }
 
-module.exports.authentication = authentication
+
+module.exports.authentication=authentication
+
 

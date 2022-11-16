@@ -1,6 +1,8 @@
 
 const { isValidObjectId } = require("mongoose")
 const moment = require('moment')
+const jwt = require('jsonwebtoken')
+
 
 const middleWare1 =  (req,res,next)=>{
     try {
@@ -43,4 +45,16 @@ module.exports.middleware2 = middleware2
 
 
 
+
+const authentication = (req,res, next)=>{
+    const token= req.headers['x-api-key']
+
+    if(!token ) res.status(400).send({status : false , msg : 'token is not exist'})
+    const tokenVerify = jwt.verify(token , "litium batch Group-3 Project -01" )
+    if(!tokenVerify) return res.status(400).send({status : false , msg : 'invalid token'})
+    req.body['x-api-key'] = token
+    next()
+}
+
+module.exports.authentication = authentication
 

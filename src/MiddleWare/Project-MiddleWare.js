@@ -47,13 +47,20 @@ module.exports.middleware2 = middleware2
 
 
 const authentication = (req,res, next)=>{
-    const token= req.headers['x-api-key']
+    try {
+        const token= req.headers['x-api-key']
+    if(!token ){
+        return res.status(400).send({status : false , msg : 'token is missing'})
+    } 
+    const tokenVerify = jwt.verify(token , "litium batch Group-3 Project -01",  )
 
-    if(!token ) res.status(400).send({status : false , msg : 'token is not exist'})
-    const tokenVerify = jwt.verify(token , "litium batch Group-3 Project -01" )
     if(!tokenVerify) return res.status(400).send({status : false , msg : 'invalid token'})
     req.body['x-api-key'] = token
     next()
+    } catch (error) {
+      return  res.status(500).send({status : false , msg : error.message})
+    }
+    
 }
 
 module.exports.authentication = authentication

@@ -25,7 +25,7 @@ const loginAuthor = async (req,res)=>{
         if(!email || !password) return res.status(400).send({status : false , msg : "please enter your Eamil Or Password"})
         const authorExist = await authorModel.findOne(req.body)
         if(!authorExist) return res.status(404).send({status : false , msg : "invalid email or password"})
-        const payload = {authorid : authorExist._id.toHexString() ,  projectName : "Blogging-Sites"}
+        const payload = {authorid : authorExist._id.toString() ,  projectName : "Blogging-Sites"}
         const token = jwt.sign(payload ,"litium batch Group-3 Project -01")
         res.status(200).send({status : true , token : token })
     } catch (error) {

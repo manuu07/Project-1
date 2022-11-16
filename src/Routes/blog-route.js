@@ -18,9 +18,9 @@ router.get('/blogs' ,middleWare.authentication ,  blogController.getBlogs)
 
 // SECOND DAY OF PROJECT ---->
 
-router.put('/blogs/:blogId', middleWare.authentication ,  blogController.updateBlogs)
-router.delete('/blogs/:blogId',middleWare.authentication  ,  blogController.deleteBlog)
-router.delete("/blogs", middleWare.authentication ,  blogController.deleteblogs) 
+router.put('/blogs/:blogId',middleWare.authentication, blogController.updateBlogs)
+router.delete('/blogs/:blogId',middleWare.authentication,blogController.deleteBlog)
+router.delete("/blogs",middleWare.authentication,blogController.deleteblogsByQuery) 
 
 //  THIRD DAY OF THE PROJECT    2ND  Phase OF THE PROJECT 
 

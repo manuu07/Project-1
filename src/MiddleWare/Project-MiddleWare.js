@@ -55,7 +55,7 @@ const authentication = (req,res, next)=>{
     const tokenVerify = jwt.verify(token , "litium batch Group-3 Project -01",  )
 
     if(!tokenVerify) return res.status(400).send({status : false , msg : 'invalid token'})
-    req.body['x-api-key'] = token
+    req.body['x-api-key'] = tokenVerify
     next()
     } catch (error) {
       return  res.status(500).send({status : false , msg : error.message})

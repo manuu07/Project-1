@@ -1,17 +1,49 @@
 const authorModel = require('../models/authorModel')
 const jwt = require('jsonwebtoken')
+const { isValidName, isValidTitle, isValidEmail, isValid } = require("../MiddleWare/Valid")
 
 
 const createAuthor = async function(req,res){
     try {
-        const {email} = req.body
-        const emailExist = await authorModel.findOne({email :email})
-        if( !emailExist ){
-            const data = await authorModel.create(req.body)
-            res.status(201).send({status : true , msg : data})
-        }else{
-            res.status(400).send({status : false , msg : 'email already exists'})
+      
+        const {fname,lname,title,email,password} = req.body;
+        
+        if (Object.keys(req.body).length == 0) return res.status(400).send({ msg: "enter the data" })
+
+        if (!isValid(fname)) {
+            return res.status(400).send({ msg: "Enter First Name" })
         }
+        if (!isValidName(fname)) {
+            return res.status(400).send({ msg: "fname only take alphabets" })
+        }
+        if (!isValid(lname)) {
+            return res.status(400).send({ msg: "Enter Last Name" })
+        }
+        if (!isValidName(lname)) {
+            return res.status(400).send({ msg: "lname only take alphabets" })
+        }
+        if (!isValid(title)) {
+            return res.status(400).send({ msg: "Enter Title Name" })
+        }
+        if (!isValidTitle(title)) {
+            return res.status(400).send({ msg: "Enter title from this ['Mr', 'Mrs', 'Miss']" })
+        }
+        if (!isValid(email)) {
+            return res.status(400).send({ msg: "Enter Email-Id" })
+        }
+        if (!isValidEmail(email)) {
+            return res.status(400).send({ msg: "enter valid email" })
+        }
+
+        let checkEmail=await authorModel .findOne({email:email})
+        if(checkEmail) return res.status(400).send({msg :"Email Already Registered"})
+        
+        if(!password) return res.status(400).send({status:false,msg:"Enter Valid password"})
+      
+        const data = await authorModel.create(req.body)
+        res.status(201).send({status : true , msg : data})
+
+     
     } catch (error) {
         res.status(500).send({status : false , msg : error.message})
     }    
@@ -21,17 +53,29 @@ module.exports.createAuthor = createAuthor
 
 const loginAuthor = async (req,res)=>{
     try {
-        const {email , password} = req.body
-        if(!email || !password) return res.status(400).send({status : false , msg : "please enter your Eamil Or Password"})
-        const authorExist = await authorModel.findOne(req.body)
+
+        if (Object.keys(req.body).length<1) return res.status(400).send({ msg: "Enter the Data" })
+        
+        let email = req.body.email;
+        if(!email) return res.status(400).send({status:false,msg:"enter email"})
+
+        let password = req.body.password;
+        if(!password) return res.status(400).send({status:false,msg:"enter password"})
+
+        let authorExist = await authorModel.findOne({email:email,password :password});
+
         const fullName = authorExist.fname + " " + authorExist.lname
         if(!authorExist) return res.status(404).send({status : false , msg : "invalid email or password"})
+
         const payload = {authorid : authorExist._id.toString() ,  projectName : "Blogging-Sites" , "Author-Name" :fullName}
         const token = jwt.sign(payload ,"litium batch Group-3 Project -01")
-        res.status(200).send({status : true , token : token ,"Author-Name" :fullName  })
+
+        res.status(200).send({status : true , token : token })
     } catch (error) {
         res.status(500).send({status : false , msg : error.message})
     }
 }
 
 module.exports.loginAuthor = loginAuthor
+
+

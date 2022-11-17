@@ -12,8 +12,8 @@ router.get('/test-me' , (req,res)=>{
 
 // FIRST DAY OF PROJECT ---->     1_st  Phase
 
-router.post('/authors' , middleWare.middleWare1 , authorController.createAuthor)
-router.post('/blogs' , middleWare.middleware2 , middleWare.authentication , blogController.createBlog)
+router.post('/authors'  , authorController.createAuthor)
+router.post('/blogs' ,  middleWare.authentication , blogController.createBlog)
 router.get('/blogs' ,middleWare.authentication ,  blogController.getBlogs)
 
 // SECOND DAY OF PROJECT ---->

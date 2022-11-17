@@ -107,10 +107,10 @@ const deleteblogsByQuery = async function (req, res) {
         if(!category && !subcategory && !tag && !authorId ){
           return  res.status(400).send({status : true , message : 'query does not exist'})
         }
-        const getAllBlogs = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag }, {authorId : authorId}] ,isDeleted : true })
-        console.log(getAllBlogs.length)
+        const getAllBlogs = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag }, {authorId : authorId}] ,isDeleted : false })
+        // console.log(getAllBlogs.length)
     if ( getAllBlogs.length == 0){
-        return res.status(404).send({status : false , message : 'wrong filter query or already deleted'})
+        return res.status(404).send({status : false , message : 'wrong filter or already deleted'})
     }
         const AuthorisedBlogs = getAllBlogs.filter(a=>{
             const authorIDs = a.authorId.toString()
@@ -118,10 +118,10 @@ const deleteblogsByQuery = async function (req, res) {
         }) 
 
     if(AuthorisedBlogs.length !== 0){
-        await blogModel.updateMany({ $or:[{category : category} , {subcategory : subcategory} ,{tags:tag} ], authorId : req.decodedToken.authorid , isDeleted : false} , {$set :{isDeleted : false , deletedAt : moment().format() }} ,{new : true}  )         
+        await blogModel.updateMany({ $or:[{category : category} , {subcategory : subcategory} ,{tags:tag} ], authorId : req.decodedToken.authorid , isDeleted : false} , {$set :{isDeleted : true , deletedAt : moment().format() }} ,{new : true}  )         
         return  res.status(200).send({status :true , msg : 'Deleted successfully ' })  
     }
-    return res.status(403).send({status : false , msg : 'Unanthorised Author'})  
+    return res.status(403).send({status : false , msg : 'Unanthorised Author or already deleted '})  
     }
     catch (err) {
         return res.send({ status: false, Error: err.message })

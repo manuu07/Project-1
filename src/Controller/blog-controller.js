@@ -1,7 +1,7 @@
 const blogModel = require('../models/blogModel')
 const authorModel = require('../models/authorModel')
 const moment = require('moment')
-const { isValid, isValidBlogTitle, isValidObjectIds , isBoolean} = require("../Validation/");
+const { isValid, isValidBlogTitle, isValidObjectIds , isBoolean} = require("../Validation/Valid");
 
 const createBlog = async function (req, res) {
     try {
@@ -97,21 +97,26 @@ if (Object.keys(req.body).length == 0) return res.status(400).send({ status: fal
        
 const {title,body,category,authorId ,isPublished} = req.body;
         
-
-        if (!isValid(title)) {      
-            return res.status(400).send({status :false , msg: "Enter Title" })
-        }                                                                 // title contain only string anfd numbers
-        if (!isValidBlogTitle(title)) {
-            return res.status(400).send({status :false , msg: "create valid title" })
+        if(title){
+            if (!isValid(title)) {      
+                return res.status(400).send({status :false , msg: "Enter Title" })
+            }   
+            if (!isValidBlogTitle(title)) {
+                return res.status(400).send({status :false , msg: "create valid title" })
+            } 
         }
-        if (!isValid(body)) {
-            return res.status(400).send({ status :false ,msg: "Enter Body" })
-        }
+        if(body){
+            if (!isValid(body)) {
+                return res.status(400).send({ status :false ,msg: "Enter Body" })
+            }
+        }                                                   // title contain only string anfd numbers
        
+       if(category){
         if (!isValid(category)) {
             return res.status(400).send({status :false , msg: "Enter Category" })
         }
-       
+       }
+       if(authorId){
         if (!isValid(authorId)) {
             return res.status(400).send({status :false , msg: "Enter Author Id" })
         }
@@ -119,7 +124,8 @@ const {title,body,category,authorId ,isPublished} = req.body;
         if (!isValidObjectIds(authorId)) {
             return res.status(400).send({status :false , msg: "Enter Valid Author Id" })
         }
-
+       }
+       
         if(isPublished){
             if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Publishehion [true , false]" })
             if (isPublished == true) {

@@ -60,13 +60,17 @@ const getBlogs = async function (req, res) {
             const getAllBlogs = await blogModel.find({ isPublished: true, isDeleted: false })
             return res.status(200).send({ status: true, message: getAllBlogs })
         }
-        if (!isValidObjectIds(authorId)) {
-            return res.status(400).send({status :false , msg: "Enter Valid Author Id" })
+        if(category){
+            if (!isValid(category)) {
+                return res.status(400).send({status :false , msg: "Enter A Valid Category" })
+            }
+           
+        }if(authorId){
+            if (!isValidObjectIds(authorId)) {
+                return res.status(400).send({status :false , msg: "Enter Valid Author Id" })
+            }
         }
-        if (!isValid(category)) {
-            return res.status(400).send({status :false , msg: "Enter A Valid Category" })
-        }
-       
+
         const blog = await blogModel.find({ $or: [{ category: category }, { subcategory: subcategory }, { tags: tags }, { authorId: authorId }] ,isPublished : true ,isDeleted : false}  )
 
         if (blog.length == 0) {
@@ -145,7 +149,7 @@ const {title,body,category,authorId ,isPublished} = req.body;
         else {
             const updateBlog = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, {
                 $set: {
-                    title: data.title, body: data.body, category: data.category, isPublished: true,publishedAt:moment().format()
+                    title: req.body.title, body: req.body.body, category: req.body.category, isPublished: true,publishedAt:moment().format()
                 },
                 $push: { subcategory: req.body.subcategory, tags: req.body.tags },
             },
@@ -200,13 +204,14 @@ const deleteblogsByQuery = async function (req, res) {
         if(!category && !subcategory && !tag && !authorId ){
           return  res.status(400).send({status : true , message : 'Enter the Valid query'})
         }
+    if(authorId){
         if (!isValid(authorId)) {
-            return res.status(400).send({status :false , msg: "Enter blog Id" })
+            return res.status(400).send({status :false , msg: "Enter author Id" })
         }
-
         if (!isValidObjectIds(authorId)) {
-            return res.status(400).send({status :false , msg: "Enter Valid blog Id" })
+            return res.status(400).send({status :false , msg: "Enter Valid author Id" })
         }
+    }    
 
         const getAllBlogs = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag }, {authorId : authorId}] ,isDeleted : false })
       

@@ -12,7 +12,7 @@ const createBlog = async function (req, res) {
         }
         if (!isValid(title)) {      
             return res.status(400).send({status :false , msg: "Enter Title" })
-        }                                                                 // title contain only string anfd numbers
+        }                                                                
         if (!isValidBlogTitle(title)) {
             return res.status(400).send({status :false , msg: "create valid title" })
         }
@@ -33,7 +33,7 @@ const createBlog = async function (req, res) {
         }
 
         if(isPublished){
-            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter only true or false without quotes" })
+            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Published status [true , false]" })
             if (isPublished == true) {
             req.body.publishedAt = moment().format() }
         }
@@ -85,6 +85,7 @@ module.exports.getBlogs = getBlogs
 const updateBlogs = async function (req, res) {
     try {
         const blogId = req.params.blogId
+
         if (!isValid(blogId)) {
             return res.status(400).send({status :false , msg: "Enter blog Id" })
         }
@@ -109,7 +110,7 @@ const {title,body,category,authorId ,isPublished} = req.body;
             if (!isValid(body)) {
                 return res.status(400).send({ status :false ,msg: "Enter Body" })
             }
-        }                                                   // title contain only string anfd numbers
+        }                                                   // title contain only string and numbers
        
        if(category){
         if (!isValid(category)) {
@@ -127,7 +128,7 @@ const {title,body,category,authorId ,isPublished} = req.body;
        }
        
         if(isPublished){
-            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Publishehion [true , false]" })
+            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Published status [true , false]" })
             if (isPublished == true) {
             req.body.publishedAt = moment().format() }
         }
@@ -145,7 +146,7 @@ const {title,body,category,authorId ,isPublished} = req.body;
         else {
             const updateBlog = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, {
                 $set: {
-                    title: data.title, body: data.body, category: data.category, isPublished: true,publishedAt:moment().format()
+                    title: req.body.title, body: req.body.body, category: req.body.category, isPublished: true,publishedAt:moment().format()
                 },
                 $push: { subcategory: req.body.subcategory, tags: req.body.tags },
             },

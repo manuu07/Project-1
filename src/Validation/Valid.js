@@ -40,7 +40,7 @@ const isValid = function(value){
     return true
 }
        
-// Each Field has to Valid Means String and Number only not special Charactors
+// Each Field has to Valid Means String and Number only not special Characters
 const isValidBlogTitle = function(title){
     const bTitleregex = /^[A-Za-z0-9 ]+$/
     return bTitleregex.test(title)

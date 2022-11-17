@@ -1,12 +1,10 @@
 const blogModel = require('../models/blogModel')
 const authorModel = require('../models/authorModel')
 const moment = require('moment')
-const { isValid, isValidBlogTitle, isValidObjectIds , isBoolean} = require("../MiddleWare/Valid");
+const { isValid, isValidBlogTitle, isValidObjectIds , isBoolean} = require("../Validation/");
 
 const createBlog = async function (req, res) {
     try {
-        // const { authorId } = req.body
-
         const {title,body,category,authorId ,isPublished} = req.body;
         
         if (Object.keys(req.body).length<1) {
@@ -35,7 +33,7 @@ const createBlog = async function (req, res) {
         }
 
         if(isPublished){
-            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Publishehion [true , false]" })
+            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter only true or false without quotes" })
             if (isPublished == true) {
             req.body.publishedAt = moment().format() }
         }
@@ -156,8 +154,6 @@ const {title,body,category,authorId ,isPublished} = req.body;
 
 module.exports.updateBlogs = updateBlogs
 
-
-
 const deleteBlog = async function (req, res) {
     try {
         const blogId = req.params.blogId
@@ -179,7 +175,7 @@ const deleteBlog = async function (req, res) {
             res.status(401).send({ status: false, msg: "Not Authorized" })
         }
         else {
-            let deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isDeleted: true, deletedAt: moment().format() ,isPublished : false , publishedAt : ''  } }, { new: true })
+            const deletedBlog = await blogModel.findOneAndUpdate({ _id: blogId }, { $set: { isDeleted: true, deletedAt: moment().format() ,isPublished : false , publishedAt : ''  } }, { new: true })
             res.status(200).send({ status: true, msg: deletedBlog })
         }
     }

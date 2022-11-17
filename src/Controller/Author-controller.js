@@ -1,15 +1,14 @@
 const authorModel = require('../models/authorModel')
 const jwt = require('jsonwebtoken')
-const { isValidName, isValidTitle, isValidEmail, isValid } = require("../MiddleWare/Valid")
+const { isValidName, isValidTitle, isValidEmail, isValid } = require("../Validation/Valid")
 
 
 const createAuthor = async function(req,res){
     try {
-      
+        if (Object.keys(req.body).length == 0) return res.status(400).send({ msg: "enter the data" })
+       
         const {fname,lname,title,email,password} = req.body;
         
-        if (Object.keys(req.body).length == 0) return res.status(400).send({ msg: "enter the data" })
-
         if (!isValid(fname)) {
             return res.status(400).send({ msg: "Enter First Name" })
         }
@@ -35,7 +34,7 @@ const createAuthor = async function(req,res){
             return res.status(400).send({ msg: "enter valid email" })
         }
 
-        let checkEmail=await authorModel .findOne({email:email})
+        const checkEmail=await authorModel .findOne({email:email})
         if(checkEmail) return res.status(400).send({msg :"Email Already Registered"})
         
         if(!password) return res.status(400).send({status:false,msg:"Enter Valid password"})
@@ -56,16 +55,21 @@ const loginAuthor = async (req,res)=>{
 
         if (Object.keys(req.body).length<1) return res.status(400).send({ msg: "Enter the Data" })
         
-        let email = req.body.email;
-        if(!email) return res.status(400).send({status:false,msg:"enter email"})
+        const email = req.body.email;
+        if (!isValid(email)) {
+            return res.status(400).send({ msg: "Enter Email-Id" })
+        }
+        if (!isValidEmail(email)) {
+            return res.status(400).send({ msg: "enter valid email" })
+        }
 
-        let password = req.body.password;
+        const password = req.body.password;
         if(!password) return res.status(400).send({status:false,msg:"enter password"})
 
-        let authorExist = await authorModel.findOne({email:email,password :password});
+        const authorExist = await authorModel.findOne({email:email,password :password});
 
         const fullName = authorExist.fname + " " + authorExist.lname
-        if(!authorExist) return res.status(404).send({status : false , msg : "invalid email or password"})
+        if(!authorExist) return res.status(401).send({status : false , msg : " Email Not Exist"})
 
         const payload = {authorid : authorExist._id.toString() ,  projectName : "Blogging-Sites" , "Author-Name" :fullName}
         const token = jwt.sign(payload ,"litium batch Group-3 Project -01")

@@ -223,11 +223,15 @@ const deleteblogsByQuery = async function (req, res) {
             const authorIDs = a.authorId.toString()
             if( authorIDs == req.decodedToken.authorid) return a   }) 
 
+            
     if(AuthorisedBlogs.length !== 0){
-        await blogModel.updateMany({ $or:[{category : category} , {subcategory : subcategory} ,{tags:tag} ], authorId : req.decodedToken.authorid , isDeleted : false} , {$set :{isDeleted : true , deletedAt : moment().format() ,isPublished : false , publishedAt : ''  }} ,{new : true}  )         
-        return  res.status(200).send({status :true , msg : 'Deleted successfully ' })  
-
-    }else{  return res.status(401).send({status : false , msg : 'Not Authorised'})    }  }
+    await blogModel.updateMany({ $or:[{category : category} , {subcategory : subcategory} ,{tags:tag} 
+        ,{authorId : req.decodedToken.authorid}] ,isDeleted : false} ,
+    {$set :{isDeleted : true , deletedAt : moment().format() ,isPublished : false , publishedAt : ''  }} ,{new : true}  )         
+       
+    return  res.status(200).send({status :true , msg : 'Deleted successfully '}  )  
+  }
+    else{  return res.status(401).send({status : false , msg : 'Not Authorised'})    }  }
     
     catch (err) { 
          return res.send({ status: false, Error: err.message }) }

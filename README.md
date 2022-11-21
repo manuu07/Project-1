@@ -1,10 +1,6 @@
 # project-01
 blogging sites
 
-Manu Srivastava
-
-sauss8
-
 # Lithium
 
 Repository for backend cohort - Lithium
@@ -145,4 +141,3 @@ Refer below sample
 #### Refer https://jsonplaceholder.typicode.com/guide/ for some fake blogs data.
 
 #### Note: Create a group database and use the same database in connection string by replacing `groupXDatabase
-GYAN

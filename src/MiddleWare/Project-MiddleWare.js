@@ -14,7 +14,7 @@ const authentication=async function(req,res,next){
             }
             next()
         })   }
-    else res.status(404).send({status:false,msg:"Token is missing"})
+    else res.status(400).send({status:false,msg:"Token is missing"})
 }
 catch(err){
     return res.status(500).send({status:false, Error:err.message})

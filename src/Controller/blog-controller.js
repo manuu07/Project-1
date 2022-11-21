@@ -90,10 +90,6 @@ const updateBlogs = async function (req, res) {
     try {
         const blogId = req.params.blogId
 
-        if (!isValid(blogId)) {
-            return res.status(400).send({status :false , msg: "Enter blog Id" })
-        }
-       
         if (!isValidObjectIds(blogId)) {
             return res.status(400).send({status :false , msg: "Enter Valid blog Id" })
         }
@@ -168,7 +164,7 @@ module.exports.updateBlogs = updateBlogs
 const deleteBlog = async function (req, res) {
     try {
         const blogId = req.params.blogId
-        if (!isValid(blogId)) {
+        if (!blogId) {
             return res.status(400).send({status :false , msg: "Enter blog Id" })
         }
        
@@ -203,7 +199,7 @@ const deleteblogsByQuery = async function (req, res) {
         const {category , subcategory , tag , authorId}  = req.query
 
         if(!category && !subcategory && !tag && !authorId ){
-          return  res.status(400).send({status : true , message : 'Enter the Valid query'})
+          return  res.status(400).send({status : false , message : 'Enter the Valid query'})
         }
     if(authorId){
         if (!isValid(authorId)) {

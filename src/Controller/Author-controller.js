@@ -68,10 +68,9 @@ const loginAuthor = async (req,res)=>{
 
         const authorExist = await authorModel.findOne({email:email,password :password});
 
-        const fullName = authorExist.fname + " " + authorExist.lname
-        if(!authorExist) return res.status(401).send({status : false , msg : " Email Not Exist"})
+        if(!authorExist) return res.status(401).send({status : false , msg : "Author does not Exist"})
 
-        const payload = {authorid : authorExist._id.toString() ,  projectName : "Blogging-Sites" , "Author-Name" :fullName}
+        const payload = {authorid : authorExist._id.toString() ,  projectName : "Blogging-Site" }
         const token = jwt.sign(payload ,"litium batch Group-3 Project -01")
 
         res.status(200).send({status : true , token : token })
